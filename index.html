@@ -28,13 +28,21 @@ html, body {
   color: var(--text);
   font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
 }
 
 a { color: var(--muted); text-decoration: none; }
 a:hover { color: var(--gold); }
 
-.page { max-width: 720px; margin: 0 auto; padding: 64px 32px 100px; }
+.page {
+  max-width: 720px; margin: 0 auto; padding: 64px 32px 100px;
+  padding-left: max(32px, env(safe-area-inset-left));
+  padding-right: max(32px, env(safe-area-inset-right));
+}
 
 /* ── NAV ── */
 nav {
@@ -47,6 +55,10 @@ nav {
   display: flex; align-items: center; gap: 0;
 }
 .nav-r { font-size: 11px; color: var(--muted); display: flex; align-items: center; gap: 16px; }
+.nav-r a {
+  padding: 16px 8px; margin: -16px -8px;
+  -webkit-tap-highlight-color: transparent;
+}
 
 /* ── HERO ── */
 .hero { margin-bottom: 80px; }
@@ -114,14 +126,28 @@ hr {
   color: var(--text); margin-bottom: 12px; letter-spacing: -0.01em;
 }
 .cta-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; line-height: 1.8; }
-.cta-email {
-  display: inline-block; font-family: 'Sora', sans-serif; font-size: 15px;
-  font-weight: 500; color: var(--gold); text-decoration: none;
-  border: 1px solid rgba(201,168,76,0.35); border-radius: 6px;
-  padding: 10px 28px; background: rgba(201,168,76,0.06);
-  transition: background 0.2s, border-color 0.2s;
+.cta-primary, .hero-cta {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'Sora', sans-serif; font-weight: 600;
+  color: var(--navy); text-decoration: none;
+  background: var(--gold); border: 1px solid var(--gold); border-radius: 6px;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 20px rgba(201,168,76,0.18);
+  transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
 }
-.cta-email:hover { background: rgba(201,168,76,0.12); border-color: rgba(201,168,76,0.6); color: var(--gold); }
+.cta-primary { font-size: 16px; padding: 14px 34px; }
+.hero-cta { font-size: 18px; padding: 17px 42px; margin-top: 32px; }
+.cta-primary:hover, .hero-cta:hover {
+  background: #dcbb5c; border-color: #dcbb5c; color: var(--navy);
+  box-shadow: 0 6px 28px rgba(201,168,76,0.34);
+  transform: translateY(-2px);
+}
+.cta-primary .arrow, .hero-cta .arrow { transition: transform 0.2s; }
+.cta-primary:hover .arrow, .hero-cta:hover .arrow { transform: translateX(3px); }
+.hero-cta-note {
+  font-size: 12px; color: var(--subtle); margin-top: 14px; letter-spacing: 0.02em;
+}
+
 
 /* ── FOOTER ── */
 footer {
@@ -133,6 +159,10 @@ footer {
   color: var(--muted); letter-spacing: 0.06em;
 }
 .footer-r { font-size: 10px; color: var(--subtle); text-align: right; line-height: 1.8; }
+.footer-r a {
+  padding: 16px 4px; margin: -16px -4px;
+  -webkit-tap-highlight-color: transparent;
+}
 
 /* ── CURSOR ── */
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
@@ -150,19 +180,26 @@ nav { animation: up 0.4s ease 0.05s both; }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 640px) {
-  .page { padding: 32px 18px 80px; }
+  .page {
+    padding: 32px 18px 80px;
+    padding-left: max(18px, env(safe-area-inset-left));
+    padding-right: max(18px, env(safe-area-inset-right));
+  }
   nav { flex-direction: column; gap: 14px; padding-bottom: 24px; margin-bottom: 48px; }
   .logo { font-size: 17px; }
   nav > div:last-child { flex-wrap: wrap; gap: 12px !important; }
   .hero { margin-bottom: 56px; }
   .headline { font-size: 34px; }
   .sub { font-size: 13px; }
+  .hero-cta { font-size: 15px; padding: 15px 24px; width: 100%; justify-content: center; margin-top: 26px; }
+  .hero-cta-note { font-size: 11px; text-align: center; }
   .step { gap: 14px; }
   .step-t { font-size: 13px; }
   .step-d { font-size: 12px; }
   .cta { padding: 36px 24px; margin: 48px 0; }
   .cta-head { font-size: 26px; }
   .cta-sub { font-size: 12px; }
+  .cta-primary { font-size: 14px; padding: 13px 24px; width: 100%; justify-content: center; }
   footer { flex-direction: column; gap: 12px; }
   footer .footer-r { text-align: left; }
 }
@@ -171,7 +208,11 @@ nav { animation: up 0.4s ease 0.05s both; }
   .cta-head { font-size: 22px; }
 }
 @media (min-width: 900px) {
-  .page { padding: 80px 48px 120px; }
+  .page {
+    padding: 80px 48px 120px;
+    padding-left: max(48px, env(safe-area-inset-left));
+    padding-right: max(48px, env(safe-area-inset-right));
+  }
   .headline { font-size: 54px; }
   .sub { font-size: 15px; }
   .block-text { font-size: 15px; }
@@ -216,7 +257,6 @@ nav { animation: up 0.4s ease 0.05s both; }
   </g>
 </svg>PIERBRIDGE<span class="cursor"></span></div>
     <div class="nav-r" style="display:flex;gap:16px;align-items:center;">
-      <a href="https://pierbridge.xyz" target="_blank">pierbridge.xyz</a>
       <a href="https://www.linkedin.com/company/pierbridgexyz/" target="_blank">LinkedIn</a>
       <a href="https://x.com/PierbridgeXYZ" target="_blank">X</a>
       <a href="mailto:hello@pierbridge.xyz" style="color:var(--text);">hello@pierbridge.xyz</a>
@@ -227,6 +267,8 @@ nav { animation: up 0.4s ease 0.05s both; }
     <div class="eyebrow">// CREATING A MARKET FOR DIGITAL ASSET FOUNDERS</div>
     <h1 class="headline">There was no exit for digital asset founders. We built one.</h1>
     <p class="sub">Thousands of digital asset projects were built on real technology, by real teams. When the market turned, the founders had nowhere to go. <em>Pierbridge exists to change that.</em></p>
+    <a class="hero-cta" href="https://burntrunway.com" target="_blank" rel="noopener">Sell your project <span class="arrow">→</span></a>
+    <div class="hero-cta-note">Two minutes. Confidential. Read by us directly.</div>
   </div>
 
   <hr>
@@ -257,8 +299,8 @@ nav { animation: up 0.4s ease 0.05s both; }
 
   <div class="cta">
     <div class="cta-head">Built something real?</div>
-    <div class="cta-sub">If you have a digital asset project and want a conversation<br>about what comes next - we are easy to reach.</div>
-    <a class="cta-email" href="mailto:hello@pierbridge.xyz">hello@pierbridge.xyz</a>
+    <div class="cta-sub">Two minutes. Confidential. Read by us directly.</div>
+    <a class="cta-primary" href="https://burntrunway.com" target="_blank" rel="noopener">Start the conversation <span class="arrow">→</span></a>
   </div>
 
   <footer>
@@ -297,7 +339,6 @@ nav { animation: up 0.4s ease 0.05s both; }
 </svg>PIERBRIDGE</div>
     <div class="footer-r">
       <span style="color:var(--muted);">🇬🇧 Based in London · Sourcing deals globally</span><br>
-      <a href="https://pierbridge.xyz" target="_blank" style="color:var(--subtle);">pierbridge.xyz</a> ·
       <a href="https://www.linkedin.com/company/pierbridgexyz/" target="_blank" style="color:var(--subtle);">LinkedIn</a> ·
       <a href="https://x.com/PierbridgeXYZ" target="_blank" style="color:var(--subtle);">X</a> ·
       <a href="mailto:hello@pierbridge.xyz" style="color:var(--muted);">hello@pierbridge.xyz</a>
