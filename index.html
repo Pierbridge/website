@@ -514,8 +514,16 @@ button.cta-primary { cursor: pointer; }
 
   <script>
   (function () {
-    // Optional: paste the Google Apps Script web app URL here to copy every enquiry into the Pierbridge Website Inbound sheet.
-    var SHEET_WEBHOOK = "";
+    // Submits straight to the "Pierbridge Website Enquiry" Google Form, which is linked to the
+    // Pierbridge Website Inbound sheet (Responses > Link to Sheets), so entries land there directly.
+    var GOOGLE_FORM_ACTION = "https://docs.google.com/forms/d/e/1FAIpQLSdCLPyrsRsXSz6ktREx-4vAaFHjo1h9ZBMm_giuToKqh0onlg/formResponse";
+    var GOOGLE_FORM_ENTRY = {
+      enquiry_type: "entry.1658954527",
+      name: "entry.1577992957",
+      email: "entry.2088365326",
+      organisation: "entry.671954688",
+      message: "entry.2089136129"
+    };
     var form = document.getElementById("inbound-form");
     var status = document.getElementById("f-status");
     var btn = document.getElementById("f-submit");
@@ -528,14 +536,13 @@ button.cta-primary { cursor: pointer; }
         return;
       }
       var data = new FormData(form);
-      var body = new URLSearchParams(data).toString();
+      if (data.get("company_url")) return;
+      var googleData = new URLSearchParams();
+      Object.keys(GOOGLE_FORM_ENTRY).forEach(function (key) {
+        googleData.append(GOOGLE_FORM_ENTRY[key], data.get(key) || "");
+      });
       btn.disabled = true; status.className = "f-status"; status.textContent = "Sending…";
-      var jobs = [fetch("/", { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body })];
-      if (SHEET_WEBHOOK && !data.get("company_url")) {
-        jobs.push(fetch(SHEET_WEBHOOK, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: body }).catch(function () {}));
-      }
-      Promise.all(jobs).then(function (r) {
-        if (!r[0].ok) throw new Error();
+      fetch(GOOGLE_FORM_ACTION, { method: "POST", mode: "no-cors", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: googleData.toString() }).then(function () {
         form.reset();
         status.className = "f-status ok";
         status.textContent = "Thanks. Your enquiry has reached us and we will be in touch shortly.";
